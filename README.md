@@ -39,7 +39,7 @@ The update step can be seen in the following equations:
 * epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) - v\_t * delta\_t / Lf * dt)
 
 (The last equation in the lecture was epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) + v\_t * delta\_t / Lf * dt).
-However, changing the last plus to a minus, helped solve issues the car had to follow the trac, and temain inside the limits)
+However, changing the last plus to a minus, helped solve issues the car had to follow the track, and temain inside the limits)
 
 The current state of the car is used as input, in order compute the next state. 
 Lf is the distance between the front of vehicle and its center of gravity. 
