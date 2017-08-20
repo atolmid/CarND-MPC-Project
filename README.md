@@ -31,12 +31,12 @@ And the actuators considered, are the following:
 ## Update step 
 The update step can be seen in the following equations:
 
-x\_(t+1) = x\_0 - (x\_t + v\_(t) * cos(psi\_(t)) * dt)
-y\_(t+1) = y\_0 - (y\_t + v\_t * sin(psi\_t) * dt)
-psi\_(t+1) = psi\_0 - (psi\_t - v\_t * delta\_t / Lf * dt)
-v\_(t+1) = v\_0 - (v\_t + a\_t * dt)
-cte\_(t+1) = cte\_0 - ((f(x\_t) -y\_t)+(v\_t* sin(epsi\_t)*dt))
-epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) - v\_t * delta\_t / Lf * dt)
+* x\_(t+1) = x\_0 - (x\_t + v\_(t) * cos(psi\_(t)) * dt)
+* y\_(t+1) = y\_0 - (y\_t + v\_t * sin(psi\_t) * dt)
+* psi\_(t+1) = psi\_0 - (psi\_t - v\_t * delta\_t / Lf * dt)
+* v\_(t+1) = v\_0 - (v\_t + a\_t * dt)
+* cte\_(t+1) = cte\_0 - ((f(x\_t) -y\_t)+(v\_t* sin(epsi\_t)*dt))
+* epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) - v\_t * delta\_t / Lf * dt)
 
 (The last equation in the lecture was epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) + v\_t * delta\_t / Lf * dt).
 However, changing the last plus to a minus, helped solve issues the car had to follow the trac, and temain inside the limits)
@@ -55,11 +55,21 @@ A third degree Polynomial was used to compute the trajectory of the car.
 The waypoints are preprocessed by transforming them to the vehicle's perspective, using the following equations:
 
 for (int i = 0; i < ptsx.size(); i++){
+
+
   double shift\_x = ptsx[i] - px;
+  
+  
   double shift_y = ptsy[i] - py;
+  
+  
 						
   ptsx[i] = shift\_x * cos(0 - psi)-shift\_y * sin(0-psi);
+  
+  
   ptsy[i] = shift\_x * sin(0 - psi)+shift\_y * cos(0-psi);
+  
+  
 }
 
 #  Model Predictive Control with Latency
