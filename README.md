@@ -1,7 +1,74 @@
 # CarND-Controls-MPC
-Self-Driving Car Engineer Nanodegree Program
+# Self-Driving Car Engineer Nanodegree Program
 
----
+# Model Predictive Controller Project
+
+## Project Description
+
+The goal of this project is to develop a nonlinear model predictive controller (NMPC), in order to navigate a track in a Udacity-provided simulator, by sending to it steering and acceleration commands.
+The simulator provides via websocket values, including the position of the car, its speed and heading direction, as well as waypoints along a reference trajectory that the car must follow.
+The coordinates are provided in a global coordinate system.
+
+
+## Model Used
+
+
+The model used in this project is the kinematic bicycle model. 
+Inertia, torque and fiction are not considered.
+The state vector consists of the following elements:
+The state vector of the vehicle is given as follow:
+1. x - Vehicle position in forward direction
+2. y - Vehicle position in lateral direction
+3. psi - Angle of the vehicle (yaw angle)
+4. v - Vehicle's speed
+
+And the actuators considered, are the following:
+1. delta - Steering angle (radians)
+2. a - acceleration
+
+
+
+## Update step 
+The update step can be seen in the following equations:
+
+x\_(t+1) = x\_0 - (x\_t + v\_(t) * cos(psi\_(t)) * dt)
+y\_(t+1) = y\_0 - (y\_t + v\_t * sin(psi\_t) * dt)
+psi\_(t+1) = psi\_0 - (psi\_t - v\_t * delta\_t / Lf * dt)
+v\_(t+1) = v\_0 - (v\_t + a\_t * dt)
+cte\_(t+1) = cte\_0 - ((f(x\_t) -y\_t)+(v\_t* sin(epsi\_t)*dt))
+epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) - v\_t * delta\_t / Lf * dt)
+
+(The last equation in the lecture was epsi\_(t+1) = epsi\_0 - ((psi\_t - psides\_t) + v\_t * delta\_t / Lf * dt).
+However, changing the last plus to a minus, helped solve issues the car had to follow the trac, and temain inside the limits)
+
+The current state of the car is used as input, in order compute the next state. 
+Lf is the distance between the front of vehicle and its center of gravity. 
+It was provided during the lectures.
+
+## Timestep Length and Elapsed Duration (N & dt)
+The values chosen for N and dt are 10 and 0.1, respectively. 
+They were the ones used during the Q&A session, and also seem to work much better than other values selected for dt, like 0.5 or 1.5.
+Using these values, the optimizer considers a duration of 1 sec, to determine a trajectory. 
+
+## Polynomial Fitting and MPC Preprocessing
+A third degree Polynomial was used to compute the trajectory of the car. 
+The waypoints are preprocessed by transforming them to the vehicle's perspective, using the following equations:
+
+for (int i = 0; i < ptsx.size(); i++){
+  double shift\_x = ptsx[i] - px;
+  double shift_y = ptsy[i] - py;
+						
+  ptsx[i] = shift\_x * cos(0 - psi)-shift\_y * sin(0-psi);
+  ptsy[i] = shift\_x * sin(0 - psi)+shift\_y * cos(0-psi);
+}
+
+#  Model Predictive Control with Latency
+Speed was limited to 80mph.
+A delay of 100msec was introduced, so the kinematic equations are adjusted accordingly.
+Since the latency is equal to the time step, the actuations are applied one time step later.
+
+The cost function parameters were selected similarly to the ones used during the Q&A session.
+There were some adjustments made though, which made the car seem to navigate the track more smoothly.
 
 ## Dependencies
 
